@@ -1,4 +1,4 @@
-altr-sale
+altr-scale
 =========
 
 scale filter for altr
