@@ -1,0 +1,19 @@
+{
+  "name": "altr-scale",
+  "version": "0.0.0",
+  "description": "scale filter for altr",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hayes/altr-scale.git"
+  },
+  "author": "Michael Hayes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hayes/altr-scale/issues"
+  },
+  "homepage": "https://github.com/hayes/altr-scale"
+}
