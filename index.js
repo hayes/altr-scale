@@ -34,7 +34,7 @@ function scale(parts, change) {
       out[i] = Array(dimensions)
 
       for(var j = 0; j < dimensions.length; ++j) {
-        out[i][j] = (data[i][j] - dimensions[j].domain_offset) * dimensions[j].scale - dimensions[j].range_offset
+        out[i][j] = (data[i][j] - dimensions[j].domain_offset) * dimensions[j].scale + dimensions[j].range_offset
       }
     }
 
