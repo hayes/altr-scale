@@ -1,6 +1,6 @@
 {
   "name": "altr-scale",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "scale filter for altr",
   "main": "index.js",
   "scripts": {
