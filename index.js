@@ -2,6 +2,15 @@ module.exports = {
     list: list
   , value: value
   , dimensions: dimensions
+  , add_to: add_to
+}
+
+function add_to(altr) {
+  altr.add_filter('scale', value)
+  altr.add_filter('scale-list', list)
+  altr.add_filter('scale-dimensions', dimensions)
+
+  return altr
 }
 
 function value(parts, change) {
