@@ -1,43 +1,98 @@
-module.exports = scale
+module.exports = scale_fn
+module.exports.filters = {
+    list: list
+  , value: value
+  , dimensions: dimensions
+  , add_to: add_to
+}
 
-function scale(parts, change) {
-  var ranges = JSON.parse(parts[1])
-    , dimensions = []
-    , prev = []
+function scale_fn(val, domain, range) {
+  return scale(val, dimension(domain, range))
+}
 
-  var update_range = this.create_part(parts[0], function(domains, ctx) {
-    dimensions = new Array(Math.max(domains.length, ranges.length))
+function add_to(altr) {
+  altr.add_filter('scale', value)
+  altr.add_filter('scale-list', list)
+  altr.add_filter('scale-dimensions', dimensions)
 
-    for(var i = 0, l = dimensions.length; i < l; ++i) {
-      dimensions[i] = {
-          scale: (ranges[i][1] - ranges[i][0]) / (domains[i][1] - domains[i][0])
-        , domain_offset: domains[i][0]
-        , range_offset: ranges[i][0]
-      }
-    }
+  return altr
+}
 
-    map(prev)
+function value(parts, change) {
+  var range = JSON.parse(parts[1])
+    , val
+
+  var update_domain = this.create_part(parts[0], function(domain, ctx) {
+    change(scale(val, dimension(domain, range)))
   })
 
-  return map
+  return function(v, ctx) {
+    val = v
+    update_domain(ctx)
+  }
+}
 
-  function map(data, ctx) {
-    if(ctx) {
-      prev = data
+function list(parts, change) {
+  var range = JSON.parse(parts[1])
+    , vals
 
-      return update_range(data, ctx)
+  var update_domain = this.create_part(parts[0], function(domain, ctx) {
+    var dimension = dimension(domain, range)
+      , result = Array(vals.length)
+
+    for(var i = 0, l = vals.length; i < l; ++i) {
+      result[i] = scale(vals[i], dimension)
     }
 
-    var out = Array(data.length)
+    change(result)
+  })
 
-    for(var i = 0, l = data.length; i < l; ++i) {
-      out[i] = Array(dimensions)
+  return function(v, ctx) {
+    vals = v
+    update_domain(ctx)
+  }
+}
 
-      for(var j = 0; j < dimensions.length; ++j) {
-        out[i][j] = (data[i][j] - dimensions[j].domain_offset) * dimensions[j].scale + dimensions[j].range_offset
+function dimensions(parts, change) {
+  var ranges = JSON.parse(parts[1])
+    , vals
+
+  var update_domain = this.create_part(parts[0], function(domains, ctx) {
+    var dimensions = new Array(Math.max(domains.length, ranges.length))
+      , out = Array(vals.length)
+
+    for(var i = 0, l = dimensions.length; i < l; ++i) {
+      dimensions[i] = dimension(domains[i], ranges[i])
+    }
+
+    for(var i = 0, l = vals.length; i < l; ++i) {
+      out[i] = Array(dimensions.length)
+
+      for(var j = 0, l2 = dimensions.length; j < l2; ++j) {
+        out[i][j] = scale(vals[i][j],  dimensions[j])
       }
     }
 
     change(out)
+  })
+
+  return function(v, ctx) {
+    vals = v
+    update_domain(ctx)
   }
+}
+
+function dimension(domain, range) {
+  return {
+      scale: (range[1] - range[0]) / (domain[1] - domain[0])
+    , domain_offset: domain[0]
+    , range_offset: range[0]
+  }
+}
+
+function scale(val, dimension) {
+  val -= dimension.domain_offset
+  val *= dimension.scale
+
+  return val + dimension.range_offset
 }
