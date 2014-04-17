@@ -1,8 +1,13 @@
-module.exports = {
+module.exports = scale_fn
+module.exports.filters = {
     list: list
   , value: value
   , dimensions: dimensions
   , add_to: add_to
+}
+
+function scale_fn(val, domain, range) {
+  return scale(val, dimension(domain, range))
 }
 
 function add_to(altr) {
