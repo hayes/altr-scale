@@ -11,9 +11,9 @@ function scale_fn(val, domain, range) {
 }
 
 function add_to(altr) {
-  altr.add_filter('scale', value)
-  altr.add_filter('scale-list', list)
-  altr.add_filter('scale-dimensions', dimensions)
+  altr.addFilter('scale', value)
+  altr.addFilter('scale-list', list)
+  altr.addFilter('scale-dimensions', dimensions)
 
   return altr
 }
